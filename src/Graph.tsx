@@ -3,30 +3,11 @@ import { Table } from '@finos/perspective';
 import { ServerRespond } from './DataStreamer';
 import './Graph.css';
 
-// Declare the global JSX namespace to include the custom element properties
-declare global {
-  namespace JSX {
-    interface IntrinsicElements {
-      'perspective-viewer': React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement> & {
-        view: string;
-        'column-pivots': string;
-        'row-pivots': string;
-        columns: string;
-        aggregates: string;
-      };
-    }
-  }
-
-  interface HTMLElementTagNameMap {
-    'perspective-viewer': PerspectiveViewerElement;
-  }
-}
-
 /**
  * Props declaration for <Graph />
  */
 interface IProps {
-  data: ServerRespond[];
+  data: ServerRespond[],
 }
 
 /**
@@ -45,18 +26,6 @@ interface PerspectiveViewerElement extends HTMLElement {
 class Graph extends Component<IProps, {}> {
   // Perspective table
   table: Table | undefined;
-
-  render() {
-    return (
-      <perspective-viewer
-        view="y_line"
-        column-pivots='["stock"]'
-        row-pivots='["timestamp"]'
-        columns='["top_ask_price"]'
-        aggregates='{"stock": "distinct count", "top_ask_price": "avg", "top_bid_price": "avg", "timestamp": "distinct count"}'>
-      </perspective-viewer>
-    );
-  }
 
   componentDidMount() {
     const elem = document.getElementsByTagName('perspective-viewer')[0] as unknown as PerspectiveViewerElement;
@@ -78,7 +47,7 @@ class Graph extends Component<IProps, {}> {
       elem.setAttribute('column-pivots', '["stock"]');
       elem.setAttribute('row-pivots', '["timestamp"]');
       elem.setAttribute('columns', '["top_ask_price"]');
-      elem.setAttribute('aggregates', '{"stock": "distinct count", "top_ask_price": "avg", "top_bid_price": "avg"}');
+      elem.setAttribute('aggregates', '{"stock": "distinct count", "top_ask_price": "avg", "top_bid_price": "avg", "timestamp": "distinct count"}');
     }
   }
 
@@ -94,8 +63,18 @@ class Graph extends Component<IProps, {}> {
       }));
     }
   }
+
+  render() {
+    return (
+      <perspective-viewer
+        view="y_line"
+        column-pivots='["stock"]'
+        row-pivots='["timestamp"]'
+        columns='["top_ask_price"]'
+        aggregates='{"stock": "distinct count", "top_ask_price": "avg", "top_bid_price": "avg", "timestamp": "distinct count"}'>
+      </perspective-viewer>
+    );
+  }
 }
 
 export default Graph;
-
-

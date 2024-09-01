@@ -29,32 +29,39 @@ class App extends Component<{}, IState> {
   }
 
   /**
-   * Render Graph react component with state.data parse as property data
+   * Render Graph react component with state.data parsed as property data
    */
   renderGraph() {
-  if (this.state.showGraph) {
-    return (<Graph data={this.state.data} />);
+    if (this.state.showGraph) {
+      return (<Graph data={this.state.data} />);
+    }
+    return null;  // Render nothing if showGraph is false
   }
-  return null;  // Render nothing if showGraph is false
-}
-
 
   /**
    * Get new data from server and update the state with the new data
    */
   getDataFromServer() {
-  // Set an interval to keep fetching data every 100ms
-  const intervalId = setInterval(() => {
-    DataStreamer.getData((serverResponds: ServerRespond[]) => {
-      // Update the state with the new data
-      this.setState({ data: [...this.state.data, ...serverResponds] });
-    });
-  }, 100);
+    // Set an interval to keep fetching data every 100ms
+    const intervalId = setInterval(() => {
+      DataStreamer.getData((serverResponds: ServerRespond[]) => {
+        // Remove duplicate data
+        const uniqueData = serverResponds.filter((newData) =>
+          !this.state.data.some((existingData) =>
+            existingData.timestamp === newData.timestamp && existingData.stock === newData.stock
+          )
+        );
 
-  // Store the interval ID in the state so it can be cleared later
-  this.setState({ intervalId });
-}
+        // Update the state with the new data
+        this.setState((prevState) => ({
+          data: [...prevState.data, ...uniqueData]
+        }));
+      });
+    }, 100);
 
+    // Store the interval ID in the state so it can be cleared later
+    this.setState({ intervalId });
+  }
 
   /**
    * Render the App react component
@@ -67,16 +74,16 @@ class App extends Component<{}, IState> {
         </header>
         <div className="App-content">
           <button className="btn btn-primary Stream-button"
-            // when button is click, our react app tries to request
+            // when button is clicked, our react app tries to request
             // new data from the server.
             // As part of your task, update the getDataFromServer() function
             // to keep requesting the data every 100ms until the app is closed
             // or the server does not return anymore data.
             onClick={() => {
-  this.setState({ showGraph: true });
-  this.getDataFromServer();
-}}
->
+              this.setState({ showGraph: true });
+              this.getDataFromServer();
+            }}
+          >
             Start Streaming Data
           </button>
           <div className="Graph">

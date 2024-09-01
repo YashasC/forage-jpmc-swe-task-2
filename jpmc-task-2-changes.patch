@@ -1,0 +1,16 @@
+From 938b015b06f31be3d9f297df4dee545c2ad9cc2c Mon Sep 17 00:00:00 2001
+From: Yashas C <yashasc2002@gmail.com>
+Date: Sun, 1 Sep 2024 16:55:01 +0530
+Subject: [PATCH] Add patch file for Task 2 changes
+
+---
+ jpmc-task-2-changes.patch | 0
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+ create mode 100644 jpmc-task-2-changes.patch
+
+diff --git a/jpmc-task-2-changes.patch b/jpmc-task-2-changes.patch
+new file mode 100644
+index 0000000..e69de29
+-- 
+2.46.0.windows.1
+
